@@ -194,7 +194,7 @@ export default function TodoApp() {
               <CheckCircle2 className="w-5 h-5 text-white" strokeWidth={2.5} />
             </div>
             <div>
-              <h1 className="text-base font-bold text-slate-900 leading-tight">Tasked</h1>
+              <h1 className="text-base font-bold text-slate-900 leading-tight">MyTugasGua</h1>
               <p className="text-xs text-slate-500 leading-tight">{user?.email}</p>
             </div>
           </div>

@@ -53,7 +53,7 @@ export default function AuthForm() {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg shadow-emerald-500/20 mb-4">
             <CheckCircle2 className="w-7 h-7 text-white" strokeWidth={2.5} />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Tasked</h1>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">MyTugasGua</h1>
           <p className="text-slate-500 mt-1 text-sm">Your personal todo list, secured in the cloud.</p>
         </div>
 
