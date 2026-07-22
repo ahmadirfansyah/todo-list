@@ -9,9 +9,12 @@ import {
   Loader2,
   X,
   ListTodo,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import { supabase, type Todo } from '../lib/supabaseClient';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 type Filter = 'all' | 'active' | 'completed';
 type LoadState = 'loading' | 'loaded' | 'error';
@@ -21,6 +24,7 @@ const MAX_TITLE = 200;
 
 export default function TodoApp() {
   const { user, signOut } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loadState, setLoadState] = useState<LoadState>('loading');
   const [newTitle, setNewTitle] = useState('');
@@ -185,25 +189,34 @@ export default function TodoApp() {
   const completedCount = todos.length - activeCount;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/40">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
       {/* Header */}
-      <header className="sticky top-0 z-10 backdrop-blur-md bg-white/80 border-b border-slate-100">
+      <header className="sticky top-0 z-10 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-100 dark:border-slate-800">
         <div className="max-w-2xl mx-auto px-4 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-md shadow-emerald-500/20">
               <CheckCircle2 className="w-5 h-5 text-white" strokeWidth={2.5} />
             </div>
             <div>
-              <h1 className="text-base font-bold text-slate-900 leading-tight">MyTugasGua</h1>
-              <p className="text-xs text-slate-500 leading-tight">{user?.email}</p>
+              <h1 className="text-base font-bold text-slate-900 dark:text-white leading-tight">MyTugasGua</h1>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-tight">{user?.email}</p>
             </div>
           </div>
-          <button
-            onClick={() => signOut()}
-            className="text-sm font-medium text-slate-500 hover:text-slate-900 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition"
-          >
-            Sign Out
-          </button>
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle dark mode"
+              className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            >
+              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+            <button
+              onClick={() => signOut()}
+              className="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
       </header>
 
@@ -216,7 +229,7 @@ export default function TodoApp() {
             onChange={(e) => setNewTitle(e.target.value)}
             placeholder="Add a new todo..."
             maxLength={MAX_TITLE}
-            className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 shadow-sm transition"
+            className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 shadow-sm transition"
           />
           <button
             type="submit"
@@ -230,20 +243,21 @@ export default function TodoApp() {
 
         {/* Filter tabs */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex gap-1 p-1 bg-slate-100 rounded-lg">
+          <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg">
             {(['all', 'active', 'completed'] as Filter[]).map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium capitalize transition-all ${
-                  filter === f ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-                }`}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium capitalize transition-all ${filter === f
+                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+                  }`}
               >
                 {f}
               </button>
             ))}
           </div>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-slate-400 dark:text-slate-500">
             {activeCount} active · {completedCount} done
           </span>
         </div>
@@ -259,9 +273,9 @@ export default function TodoApp() {
         {loadState === 'loading' && (
           <div className="space-y-2">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-slate-100 shadow-sm">
-                <div className="w-5 h-5 rounded-full bg-slate-100 animate-pulse" />
-                <div className="flex-1 h-4 rounded bg-slate-100 animate-pulse" />
+              <div key={i} className="flex items-center gap-3 p-3.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm">
+                <div className="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-700 animate-pulse" />
+                <div className="flex-1 h-4 rounded bg-slate-100 dark:bg-slate-700 animate-pulse" />
               </div>
             ))}
           </div>
@@ -284,13 +298,13 @@ export default function TodoApp() {
 
         {loadState === 'loaded' && filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
-              <ListTodo className="w-7 h-7 text-slate-400" />
+            <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
+              <ListTodo className="w-7 h-7 text-slate-400 dark:text-slate-500" />
             </div>
-            <p className="text-sm font-medium text-slate-700">
+            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
               {todos.length === 0 ? 'No todos yet' : `No ${filter} todos`}
             </p>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
               {todos.length === 0 ? 'Add your first todo above to get started.' : 'Try a different filter.'}
             </p>
           </div>
@@ -301,7 +315,7 @@ export default function TodoApp() {
             {filtered.map((todo) => (
               <li
                 key={todo.id}
-                className="group flex items-center gap-3 p-3.5 rounded-xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-slate-200 transition-all"
+                className="group flex items-center gap-3 p-3.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-slate-200 dark:hover:border-slate-600 transition-all"
               >
                 {/* Toggle / checkbox */}
                 <button
@@ -325,13 +339,12 @@ export default function TodoApp() {
                     onChange={(e) => setEditTitle(e.target.value)}
                     onKeyDown={(e) => handleEditKeyDown(e, todo)}
                     maxLength={MAX_TITLE}
-                    className="flex-1 px-2 py-1 -mx-2 rounded-md border border-emerald-300 bg-white text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                    className="flex-1 px-2 py-1 -mx-2 rounded-md border border-emerald-300 dark:border-emerald-600 bg-white dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
                   />
                 ) : (
                   <span
-                    className={`flex-1 text-sm transition-colors ${
-                      todo.completed ? 'text-slate-400 line-through' : 'text-slate-800'
-                    }`}
+                    className={`flex-1 text-sm transition-colors ${todo.completed ? 'text-slate-400 dark:text-slate-500 line-through' : 'text-slate-800 dark:text-slate-100'
+                      }`}
                   >
                     {todo.title}
                   </span>
